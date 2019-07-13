@@ -1,5 +1,5 @@
-let rows = 40;
-let cols = 40;
+let rows = 20;
+let cols = 20;
 let w, h; // width, height of cell
 let grid = [];
 let currentCell;
@@ -12,7 +12,7 @@ let path = [];
 let createMaze;
 
 function setup() {
-  createCanvas(600, 600);
+  createCanvas(400, 400);
   w = width/cols;
   h = height/rows;
   for(let i=0; i<rows; i++){
