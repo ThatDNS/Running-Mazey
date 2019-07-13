@@ -1,6 +1,9 @@
 function Cell(i, j) {
   this.i = i;
   this.j = j;
+  this.f = 0;
+  this.g = 0;
+  this.h = 0;
   this.walls = {
     top: true,
     bottom: true,
@@ -14,11 +17,13 @@ function Cell(i, j) {
     left: null
   }
   this.visited = false;
+  this.previous = undefined;
 
-  this.show = function() {
+  this.show = function(color) {
     let x = this.i*w;
     let y = this.j*h;
     stroke(0);
+    strokeWeight(1);
     if(this.walls.top)   { line(x  ,y  ,x+w,y  ); }
     if(this.walls.right) { line(x+w,y  ,x+w,y+w); }
     if(this.walls.bottom){ line(x+w,y+w,x  ,y+w); }
@@ -38,6 +43,14 @@ function Cell(i, j) {
     noStroke();
     fill(255, 0, 0);
     rect(x, y, w, h);
+  }
+
+  this.specialHighlight = function(color) {
+    let x = this.i*w;
+    let y = this.j*h;
+    noStroke();
+    fill(color);
+    circle(x+w/2, y+h/2, w/5);
   }
 
   this.addNeighbors = function() {
