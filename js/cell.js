@@ -20,37 +20,37 @@ function Cell(i, j) {
   this.previous = undefined;
 
   this.show = function(color) {
-    let x = this.i*w;
-    let y = this.j*h;
+    let x = this.i*cellSize;
+    let y = this.j*cellSize;
     stroke(0);
     strokeWeight(1);
-    if(this.walls.top)   { line(x  ,y  ,x+w,y  ); }
-    if(this.walls.right) { line(x+w,y  ,x+w,y+w); }
-    if(this.walls.bottom){ line(x+w,y+w,x  ,y+w); }
-    if(this.walls.left)  { line(x  ,y+w,x  ,y  ); }
+    if(this.walls.top)   { line(x         ,y         ,x+cellSize,y         ); }
+    if(this.walls.right) { line(x+cellSize,y         ,x+cellSize,y+cellSize); }
+    if(this.walls.bottom){ line(x+cellSize,y+cellSize,x         ,y+cellSize); }
+    if(this.walls.left)  { line(x         ,y+cellSize,x         ,y         ); }
 
     if(this.visited){
       fill(200);
       noStroke();
-      rect(x, y, w, h);
+      rect(x, y, cellSize, cellSize);
     }
 
   }
 
   this.highlight = function() {
-    let x = this.i*w;
-    let y = this.j*h;
+    let x = this.i*cellSize;
+    let y = this.j*cellSize;
     noStroke();
     fill(255, 0, 0);
-    rect(x, y, w, h);
+    rect(x, y, cellSize, cellSize);
   }
 
   this.specialHighlight = function(color) {
-    let x = this.i*w;
-    let y = this.j*h;
+    let x = this.i*cellSize;
+    let y = this.j*cellSize;
     noStroke();
     fill(color);
-    circle(x+w/2, y+h/2, w/5);
+    circle(x+cellSize/2, y+cellSize/2, cellSize/5);
   }
 
   this.addNeighbors = function() {
@@ -105,6 +105,6 @@ function Cell(i, j) {
 }
 
 function getIndex(i, j) {
-  if(i<0 || j<0 || i>cols-1 || j>rows-1){ return -1; }
-  return j+i*cols;
+  if(i<0 || j<0 || i>numCells-1 || j>numCells-1){ return -1; }
+  return i*numCells+j;
 }

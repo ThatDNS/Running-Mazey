@@ -1,38 +1,53 @@
-let rows = 20;
-let cols = 20;
-let w, h; // width, height of cell
+// INPUTS  --------------------------------------------------------------------
+let size = 400; // side size (in pixels) of the square grid
+let numCells = 20; // number of cells in a row or column
+
+// GLOBAL VARIABLES (for maze generation) -------------------------------------
+let cellSize; // size of side of cell (calculated automaticallys)
 let grid = [];
 let currentCell;
-let start, end;
-
 let stack = [];
+
+// GLOBAL VARIABLES (for A* search algo) --------------------------------------
+let start, end;
 let openSet = [];
 let closedSet = [];
 let path = [];
 let createMaze;
 
 function setup() {
-  createCanvas(400, 400);
-  w = width/cols;
-  h = height/rows;
-  for(let i=0; i<rows; i++){
-    for(let j=0; j<cols; j++){
-      let cell = new Cell(i, j, w, h);
+  createCanvas(size, size);
+  cellSize = size/numCells;
+  for(let i=0; i<numCells; i++){
+    for(let j=0; j<numCells; j++){
+      let cell = new Cell(i, j);
       grid.push(cell);
     }
   }
+  // 'grid' is a 1D array.
+  // 1D array can be thought of as a 2D array if
+  // you put all the rows together one after another.
 
-  currentCell = grid[0];
+  // SAMPLE GRID to visualize: (numCells = 5)
+  //         j (0 to 4)
+  //        ______________
+  //  i=0: |__|__|__|__|__|
+  //  i=1: |__|__|__|__|__|
+  //  i=2: |__|__|__|__|__|
+  //  i=3: |__|__|__|__|__|
+  //  i=4: |__|__|__|__|__|
 
-  for(let i=0; i<rows; i++){
-    for(let j=0; j<cols; j++){
-      grid[i*rows+j].addNeighbors();
+  currentCell = grid[0]; // start maze generation with first column and first row cell.
+
+  for(let i=0; i<numCells; i++){
+    for(let j=0; j<numCells; j++){
+      grid[i*numCells+j].addNeighbors();
     }
   }
   createMaze = true;
 
   start = grid[0];
-  end = grid[rows*cols-1];
+  end = grid[numCells*numCells-1];
   openSet.push(start);
 
 }
@@ -48,22 +63,21 @@ function draw() {
     currentCell.visited = true;
     currentCell.highlight();
     let nextCell = currentCell.moveToNeighbor();
-    if(nextCell) {
+    if(nextCell){
       nextCell.visited = true;
       stack.push(currentCell);
       currentCell = nextCell;
     } else if (stack.length > 0){
       currentCell = stack.pop();
     } else if (stack.length == 0){
-      console.log("END");
       createMaze = false;
     }
   } else {
     let current;
-    if(openSet.length > 0) {
+    if(openSet.length > 0){
       // getting element with lowest f value in the worst way possible :P
       let lowestNodeIndex = 0;
-      for(let i=0; i<openSet.length; i++) { // heap should be used. not linear search :P
+      for(let i=0; i<openSet.length; i++){ // heap should be used. not linear search :P
         if(openSet[i].f < openSet[lowestNodeIndex].f){
           lowestNodeIndex = i;
         }
@@ -87,13 +101,13 @@ function draw() {
       if(current.neighbors['left'] != null) { neighbors.push(current.neighbors['left']); }
 
       let noWall;
-      for(neighbor of neighbors) {
+      for(neighbor of neighbors){
         noWall = (current.neighbors['top'] == neighbor && !current.walls.top)
               || (current.neighbors['right'] == neighbor && !current.walls.right)
               || (current.neighbors['bottom'] == neighbor && !current.walls.bottom)
               || (current.neighbors['left'] == neighbor && !current.walls.left);
 
-        if(!closedSet.includes(neighbor) && noWall) {
+        if(!closedSet.includes(neighbor) && noWall){
           let tempGScore = current.g + 1;
           let newPath = false;
           if(openSet.includes(neighbor)){
@@ -131,10 +145,10 @@ function draw() {
 
     noFill();
     stroke(137, 28, 247);
-    strokeWeight(width/(7*cols));
+    strokeWeight(size/(7*numCells));
     beginShape();
     for(let i=0; i<path.length; i++){
-      vertex(path[i].i*(width/cols) + (width/(2*cols)), path[i].j*(height/rows) + (height/(2*rows)));
+      vertex(path[i].i*(size/numCells) + (size/(2*numCells)), path[i].j*(size/numCells) + (size/(2*numCells)));
     }
     endShape();
 
