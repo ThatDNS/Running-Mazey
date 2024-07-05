@@ -1,5 +1,4 @@
 # Running Mazey
-See the project in action: [HERE!](https://dns-404.github.io/projects/visual/Running-Mazey/index.html)<br>
 This program generates a random maze from an initial grid and then Mazey (an A.I. :P) finds the approximate shortest path from top left corner to the bottom right corner of the grid.
 
 ## Algorithm Used: A* Search Algorithm
